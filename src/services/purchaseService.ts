@@ -51,18 +51,29 @@ export class PurchaseServiceClass {
     }
 
     try {
-      if (!this.isInitialized) return false;
+      if (!this.isInitialized) {
+        const cached = await AsyncStorage.getItem('@premium_status_cached');
+        return cached === 'true';
+      }
       const customerInfo = await Purchases.getCustomerInfo();
-      return customerInfo.entitlements.active['premium'] !== undefined;
+      const premium = customerInfo.entitlements.active['premium'] !== undefined;
+      await AsyncStorage.setItem('@premium_status_cached', premium ? 'true' : 'false');
+      return premium;
     } catch (error) {
       console.error('[PurchaseService] Error fetching customer info:', error);
-      return false;
+      try {
+        const cached = await AsyncStorage.getItem('@premium_status_cached');
+        return cached === 'true';
+      } catch {
+        return false;
+      }
     }
   }
 
   public async cancelPremium(): Promise<boolean> {
     try {
       await AsyncStorage.removeItem('@premium_status');
+      await AsyncStorage.removeItem('@premium_status_cached');
       return true;
     } catch {
       return false;
@@ -108,7 +119,9 @@ export class PurchaseServiceClass {
         // Purchase the first available package (e.g. monthly premium)
         const packageToBuy = offerings.current.availablePackages[0];
         const { customerInfo } = await Purchases.purchasePackage(packageToBuy);
-        return customerInfo.entitlements.active['premium'] !== undefined;
+        const premium = customerInfo.entitlements.active['premium'] !== undefined;
+        await AsyncStorage.setItem('@premium_status_cached', premium ? 'true' : 'false');
+        return premium;
       }
       
       // Fallback if no offerings configured but SDK is running in sandbox
