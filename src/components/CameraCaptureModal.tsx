@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, ActivityIndicator, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CameraService, CameraStatus } from '../services/cameraService';
 import WifiHelperModal from './WifiHelperModal';
 
@@ -12,6 +14,7 @@ type Props = {
 };
 
 export default function CameraCaptureModal({ visible, onClose, onPhotoCaptured }: Props) {
+  const insets = useSafeAreaInsets();
   const [loadingInfo, setLoadingInfo] = useState(true);
   const [cameraInfo, setCameraInfo] = useState<CameraStatus | null>(null);
   const [capturing, setCapturing] = useState(false);
@@ -92,7 +95,12 @@ export default function CameraCaptureModal({ visible, onClose, onPhotoCaptured }
     >
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
+        <LinearGradient
+          colors={['#007AFF', '#5E5CE6']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.header, { paddingTop: insets.top || 20 }]}
+        >
           <TouchableOpacity onPress={onClose} style={styles.closeButton} disabled={capturing}>
             <Ionicons name="close" size={28} color="white" />
           </TouchableOpacity>
@@ -104,7 +112,7 @@ export default function CameraCaptureModal({ visible, onClose, onPhotoCaptured }
           ) : (
             <View style={{ width: 44 }} />
           )}
-        </View>
+        </LinearGradient>
 
         {/* Live Preview Area */}
         <View style={styles.previewContainer}>
@@ -122,23 +130,38 @@ export default function CameraCaptureModal({ visible, onClose, onPhotoCaptured }
               </Text>
               
               <TouchableOpacity style={styles.guideBtn} onPress={() => setWifiHelperVisible(true)}>
-                <Ionicons name="help-circle-outline" size={20} color="#007AFF" style={{ marginRight: 6 }} />
+                <Ionicons name="help-circle-outline" size={20} color="#5E5CE6" style={{ marginRight: 6 }} />
                 <Text style={styles.guideBtnText}>WLAN-Anleitung anzeigen</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.retryBtn} onPress={initConnection}>
-                <Text style={styles.retryBtnText}>Verbindung erneut prüfen</Text>
+              <TouchableOpacity onPress={initConnection} style={styles.actionButtonContainer}>
+                <LinearGradient
+                  colors={['#007AFF', '#5E5CE6']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.retryBtnGradient}
+                >
+                  <Ionicons name="sync-outline" size={20} color="white" style={{ marginRight: 8 }} />
+                  <Text style={styles.retryBtnText}>Verbindung erneut prüfen</Text>
+                </LinearGradient>
               </TouchableOpacity>
 
               <TouchableOpacity 
-                style={[styles.retryBtn, { backgroundColor: '#34C759', marginTop: 12, flexDirection: 'row', alignItems: 'center' }]} 
                 onPress={() => {
                   CameraService.enableSimulation(true);
                   initConnection();
                 }}
+                style={[styles.actionButtonContainer, { marginTop: 12 }]}
               >
-                <Ionicons name="construct-outline" size={18} color="white" style={{ marginRight: 6 }} />
-                <Text style={styles.retryBtnText}>Kamera simulieren (Demo)</Text>
+                <LinearGradient
+                  colors={['#34C759', '#30B34A']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.retryBtnGradient}
+                >
+                  <Ionicons name="construct-outline" size={20} color="white" style={{ marginRight: 8 }} />
+                  <Text style={styles.retryBtnText}>Kamera simulieren (Demo)</Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           ) : (
@@ -210,12 +233,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
     paddingBottom: 16,
     paddingHorizontal: 16,
-    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: '#2C2C2E',
+    borderBottomColor: 'rgba(255,255,255,0.1)',
   },
   headerTitle: {
     color: 'white',
@@ -267,22 +288,36 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#3A3A3C',
   },
   guideBtnText: {
-    color: '#007AFF',
+    color: '#5E5CE6',
     fontWeight: '600',
     fontSize: 15,
   },
-  retryBtn: {
-    backgroundColor: '#007AFF',
+  actionButtonContainer: {
+    width: '100%',
+    maxWidth: 280,
+    borderRadius: 24,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  retryBtnGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: 24,
   },
   retryBtnText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   batteryBadge: {

@@ -12,7 +12,6 @@
     },
     "android": {
       "package": "com.john.bildverortung360",
-      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -39,7 +38,14 @@
       ],
       "expo-sharing",
       "@react-native-community/datetimepicker",
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
       "expo-font"
     ],
     "experiments": {
