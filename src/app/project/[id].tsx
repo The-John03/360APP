@@ -300,12 +300,13 @@ export default function ProjectDetailScreen() {
     filteredMarkers.forEach((marker, mIndex) => {
       marker.media.forEach((media) => {
         if (media.type === 'photo' || media.type === 'photo360') {
-          if (media.uri) {
-             const ext = media.uri.split('.').pop()?.split('?')[0] || 'jpg';
+          const targetUri = media.localUri || media.uri;
+          if (targetUri) {
+             const ext = targetUri.split('.').pop()?.split('?')[0] || 'jpg';
              const cleanExt = ['jpg','jpeg','png'].includes(ext.toLowerCase()) ? ext : 'jpg';
              const safeMarkerName = (marker.label || `Marker_${mIndex + 1}`).replace(/[^a-zA-Z0-9]/g, '_');
              mediaToZip.push({
-               uri: media.uri,
+               uri: targetUri,
                name: `${safeMarkerName}_Bild_${counter++}.${cleanExt}`
              });
           }
@@ -656,7 +657,7 @@ export default function ProjectDetailScreen() {
           onPress={() => setViewingMedia(item)}
         >
           <View style={styles.mediaThumbnailContainer}>
-            <Image source={{ uri: item.uri }} style={styles.mediaPhoto} />
+            <Image source={{ uri: item.localUri || item.uri }} style={styles.mediaPhoto} />
             {is360 && (
               <View style={styles.icon360Badge}>
                 <Ionicons name="globe-outline" size={16} color="white" />
@@ -1104,11 +1105,11 @@ export default function ProjectDetailScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.viewerContent}>
-            {viewingMedia?.type === 'photo' && viewingMedia.uri && (
-              <ImageViewer2D imageUrl={viewingMedia.uri} mediaId={viewingMedia.id} />
+            {viewingMedia?.type === 'photo' && (viewingMedia.localUri || viewingMedia.uri) && (
+              <ImageViewer2D imageUrl={(viewingMedia.localUri || viewingMedia.uri)!} mediaId={viewingMedia.id} />
             )}
-            {viewingMedia?.type === 'photo360' && viewingMedia.uri && (
-              <PanoramaViewer imageUrl={viewingMedia.uri} mediaId={viewingMedia.id} />
+            {viewingMedia?.type === 'photo360' && (viewingMedia.localUri || viewingMedia.uri) && (
+              <PanoramaViewer imageUrl={(viewingMedia.localUri || viewingMedia.uri)!} mediaId={viewingMedia.id} />
             )}
           </View>
         </View>

@@ -83,7 +83,7 @@ export default function PanoramaViewer({ imageUrl: originalUrl, mediaId }: Props
     return (
       <View style={styles.container}>
         <iframe
-          srcDoc={getPannellumHtml(imageUrl, true)}
+          srcDoc={getPannellumHtml(imageUrl || '', true)}
           style={{ width: '100%', height: '100%', border: 'none' }}
           title="360 Panorama Viewer"
           onLoad={() => setLoading(false)}
@@ -114,7 +114,7 @@ export default function PanoramaViewer({ imageUrl: originalUrl, mediaId }: Props
   return (
     <View style={styles.container}>
       <WebView
-        source={{ html: getPannellumHtml(imageUrl, false), baseUrl: baseUrl }}
+        source={{ html: getPannellumHtml(imageUrl || '', false), baseUrl: baseUrl }}
         style={styles.webview}
         originWhitelist={['*']}
         allowFileAccess={true}

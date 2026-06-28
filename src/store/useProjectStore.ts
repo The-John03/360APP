@@ -16,6 +16,7 @@ export type MediaItem = {
   id: string;
   type: 'photo' | 'photo360' | 'note';
   uri?: string;
+  localUri?: string;
   text?: string;
   fileSize?: number;
   createdAt: string;
@@ -37,6 +38,7 @@ export type FloorPlan = {
   id: string;
   name: string;
   pdfUrl: string;
+  localPdfUrl?: string;
   pdfSize?: number;
 };
 
@@ -293,7 +295,7 @@ export const useProjectStore = create<ProjectState>()(
               if (fp.pdfUrl && !fp.pdfUrl.startsWith('http') && !fp.pdfUrl.startsWith('data:')) {
                 try {
                   const newUrl = await uploadFileToStorage(fp.pdfUrl, `projects/${proj.id}/floorplans/${fp.id}.pdf`);
-                  updatedFloorPlans[fpIdx] = { ...fp, pdfUrl: newUrl };
+                  updatedFloorPlans[fpIdx] = { ...fp, pdfUrl: newUrl, localPdfUrl: fp.localPdfUrl || fp.pdfUrl };
                   projChanged = true;
                 } catch (e) { console.error('Failed to upload PDF', e); throw e; }
               }
@@ -317,7 +319,7 @@ export const useProjectStore = create<ProjectState>()(
               if (md.uri && !md.uri.startsWith('http') && !md.uri.startsWith('data:')) {
                 try {
                   const newUrl = await uploadFileToStorage(md.uri, `projects/${marker.projectId}/media/${md.id}.jpg`);
-                  updatedMedia[mdIdx] = { ...md, uri: newUrl };
+                  updatedMedia[mdIdx] = { ...md, uri: newUrl, localUri: md.localUri || md.uri };
                   markerChanged = true;
                 } catch (e) { console.error('Failed to upload media', e); throw e; }
               }
@@ -376,7 +378,10 @@ export const useProjectStore = create<ProjectState>()(
             } else {
               const lp = localProjectsMap.get(sp.id)!;
               const fpMap = new Map(lp.floorPlans.map(f => [f.id, f]));
-              sp.floorPlans?.forEach(sfp => fpMap.set(sfp.id, sfp));
+              sp.floorPlans?.forEach(sfp => {
+                const localFp = fpMap.get(sfp.id);
+                fpMap.set(sfp.id, { ...localFp, ...sfp });
+              });
               localProjectsMap.set(sp.id, { ...lp, ...sp, floorPlans: Array.from(fpMap.values()) });
             }
           });
@@ -388,7 +393,10 @@ export const useProjectStore = create<ProjectState>()(
             } else {
               const lm = localMarkersMap.get(sm.id)!;
               const mediaMap = new Map(lm.media.map(med => [med.id, med]));
-              sm.media?.forEach(smed => mediaMap.set(smed.id, smed));
+              sm.media?.forEach(smed => {
+                const localMed = mediaMap.get(smed.id);
+                mediaMap.set(smed.id, { ...localMed, ...smed });
+              });
               localMarkersMap.set(sm.id, { ...lm, ...sm, media: Array.from(mediaMap.values()) });
             }
           });
@@ -449,7 +457,7 @@ export const useProjectStore = create<ProjectState>()(
         (get() as any).checkStorageLimit(size);
 
         const newFpId = uuid.v4() as string;
-        const newFp: FloorPlan = { id: newFpId, name, pdfUrl, pdfSize: size };
+        const newFp: FloorPlan = { id: newFpId, name, pdfUrl, localPdfUrl: pdfUrl, pdfSize: size };
         
         set((state) => ({
           projects: state.projects.map(p => p.id === projectId ? { ...p, floorPlans: [...(p.floorPlans || []), newFp] } : p)
@@ -464,7 +472,7 @@ export const useProjectStore = create<ProjectState>()(
         set((state) => ({
           projects: state.projects.map(p => p.id === projectId ? {
             ...p,
-            floorPlans: p.floorPlans.map(fp => fp.id === floorPlanId ? { ...fp, pdfUrl, pdfSize: size } : fp)
+            floorPlans: p.floorPlans.map(fp => fp.id === floorPlanId ? { ...fp, pdfUrl, localPdfUrl: pdfUrl, pdfSize: size } : fp)
           } : p)
         }));
         get().triggerAutoSync();
@@ -530,8 +538,12 @@ export const useProjectStore = create<ProjectState>()(
           fileSize: size
         };
 
-        if (type === 'photo' || type === 'photo360') newMedia.uri = value;
-        else newMedia.text = value;
+        if (type === 'photo' || type === 'photo360') {
+          newMedia.uri = value;
+          newMedia.localUri = value;
+        } else {
+          newMedia.text = value;
+        }
 
         set((state) => ({
           markers: state.markers.map(m => m.id === markerId ? { ...m, media: [...(m.media || []), newMedia] } : m)
