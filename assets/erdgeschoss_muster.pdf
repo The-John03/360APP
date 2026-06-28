@@ -1,0 +1,106 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 841.89 595.28] /Resources 4 0 R /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >>
+endobj
+5 0 obj
+<< /Length 994 >>
+stream
+% Set line width and stroke color (dark gray)
+0.3 0.3 0.3 RG
+2.5 w
+
+% Outer walls (rectangle x=50 y=50 width=740 height=495)
+50 50 740 450 re S
+
+% Draw inner walls (thick lines)
+4.0 w
+
+% Horizontal partition
+50 200 m 790 200 l S
+
+% Vertical partitions
+300 200 m 300 500 l S
+520 200 m 520 500 l S
+420 50 m 420 200 l S
+
+% Door openings (white fills)
+1.0 1.0 1.0 rg
+
+% Entrance door
+380 48 40 5 re f S
+% Room doors
+280 198 40 5 re f S
+500 198 40 5 re f S
+400 120 5 30 re f S
+
+0.5 0.7 0.9 RG
+1.5 w
+70 48 80 4 re f S
+700 48 80 4 re f S
+150 498 120 4 re f S
+450 498 120 4 re f S
+48 280 4 80 re f S
+788 280 4 80 re f S
+
+0.1 0.1 0.1 rg
+
+BT
+  /F1 16 Tf
+  80 350 Td
+  (Wohnzimmer (Muster)) Tj
+ET
+
+BT
+  /F1 14 Tf
+  340 350 Td
+  (Kueche (Muster)) Tj
+ET
+
+BT
+  /F1 14 Tf
+  580 350 Td
+  (Schlafzimmer (Muster)) Tj
+ET
+
+BT
+  /F1 12 Tf
+  150 110 Td
+  (Bad (Muster)) Tj
+ET
+
+BT
+  /F1 13 Tf
+  480 110 Td
+  (Flur / Eingang (Muster)) Tj
+ET
+
+0.3 0.2 0.7 rg
+BT
+  /F1 22 Tf
+  50 530 Td
+  (Erdgeschoss (Musterplan)) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000225 00000 n 
+0000000317 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1362
+%%EOF

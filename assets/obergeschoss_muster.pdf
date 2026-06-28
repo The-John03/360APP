@@ -1,0 +1,106 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 841.89 595.28] /Resources 4 0 R /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >>
+endobj
+5 0 obj
+<< /Length 1010 >>
+stream
+% Set line width and stroke color (dark gray)
+0.3 0.3 0.3 RG
+2.5 w
+
+% Outer walls (rectangle x=50 y=50 width=740 height=495)
+50 50 740 450 re S
+
+% Draw inner walls (thick lines)
+4.0 w
+
+% Horizontal partition
+50 220 m 790 220 l S
+
+% Vertical partitions
+260 220 m 260 500 l S
+560 220 m 560 500 l S
+350 50 m 350 220 l S
+
+% Door openings (white fills)
+1.0 1.0 1.0 rg
+
+% Balcony door
+380 48 40 5 re f S
+% Room doors
+240 218 40 5 re f S
+540 218 40 5 re f S
+330 120 5 30 re f S
+
+0.5 0.7 0.9 RG
+1.5 w
+70 48 80 4 re f S
+700 48 80 4 re f S
+150 498 120 4 re f S
+450 498 120 4 re f S
+48 280 4 80 re f S
+788 280 4 80 re f S
+
+0.1 0.1 0.1 rg
+
+BT
+  /F1 14 Tf
+  80 340 Td
+  (Kinderzimmer 1 (Muster)) Tj
+ET
+
+BT
+  /F1 14 Tf
+  340 340 Td
+  (Kinderzimmer 2 (Muster)) Tj
+ET
+
+BT
+  /F1 14 Tf
+  580 340 Td
+  (Elternzimmer (Muster)) Tj
+ET
+
+BT
+  /F1 12 Tf
+  150 110 Td
+  (Abstellraum (Muster)) Tj
+ET
+
+BT
+  /F1 13 Tf
+  450 110 Td
+  (Flur OG (Muster)) Tj
+ET
+
+0.3 0.2 0.7 rg
+BT
+  /F1 22 Tf
+  50 530 Td
+  (1. Obergeschoss (Musterplan)) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000225 00000 n 
+0000000317 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1379
+%%EOF
